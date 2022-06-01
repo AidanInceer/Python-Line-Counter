@@ -69,8 +69,6 @@ if __name__ == '__main__':
     add_arguments(parser)
     args = parser.parse_args()
     args.git = True
-    print(args)
-    print()
 
     if args.directory is None:
         directory = input('\nDirectory path: ')
@@ -78,7 +76,9 @@ if __name__ == '__main__':
         directory = args.directory
 
     directories_count = count_directories(directory, args)
-    print(f"Number of directories to count {directories_count}")
+    print(f"Number of sub-directories to count {directories_count}")
     
     result = dir_line_count(directory, args, total = directories_count)
-    print(f"\n\nNumber of lines: {result}\n")
+    print(f"Number of lines found: {result}\n")
+
+    input("Press enter to exit")
