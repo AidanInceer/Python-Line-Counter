@@ -1,14 +1,14 @@
 # Python-line-counter
 
-Counts the number of lines in files in a directory
+Counts the number of lines in files in a directory.
 
 ## About
 
-This is a simple Python script which, given a directory, will print the total number of lines in every file
+This is a simple Python script which, given a directory, will print the total number of lines in every file.
 
 ## Installation
 
-Download the src folder
+Download the src folder.
 
 ## Usage
 
