@@ -8,7 +8,7 @@ This is a simple Python script which, given a directory, will print the total nu
 
 ## Installation
 
-Download the src folder and
+Download the src folder
 
 ## Usage
 
