@@ -12,6 +12,8 @@ Download the src folder.
 
 ## Usage
 
+Run line_counter.py with the following optional commands:
+
 ```-h, --help              show this help message and exit
 -m MAXDEPTH, --maxdepth MAXDEPTH    Sets the max recusrion depth
 -d DIRECTORY, --directory DIRECTORY The directory to scan
