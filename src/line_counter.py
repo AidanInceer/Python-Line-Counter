@@ -19,8 +19,6 @@ def count_directories(path, args):
 
 
 def item_line_count(path, args, depth = 0, total = 0, iteration = 0):
-    skip = False
-    
     if depth > args.maxdepth and args.maxdepth > 0:
         return 0
 
@@ -33,9 +31,6 @@ def item_line_count(path, args, depth = 0, total = 0, iteration = 0):
 
         for ignore in direcorties_to_ignore:
             if ignore in path and not args.all:
-                skip = True 
-
-        if skip:
             return 0
 
         if args.printdirectory: print(path)
