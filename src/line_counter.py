@@ -23,31 +23,43 @@ def item_line_count(path, args, depth = 0, total = 0, iteration = 0):
         return 0
 
     if isdir(path):
-
-        iteration += 1
-
-        # if total > 0:
-            # print_progress_bar(iteration, total)
-
-        for ignore in direcorties_to_ignore:
-            if ignore in path and not args.all:
-            return 0
-
-        if args.printdirectory: print(path)
-        return dir_line_count(path, args, depth + 1, total, iteration)
+        return count_lines_in_driectory(path, args, depth, total, iteration)
+        
 
     elif isfile(path):
-        if args.printfile: 
-            print(path)
-        if path.lower().endswith(tuple(types_to_ignore)): 
-            return 0
-        return len(open(path, 'rb').readlines())
+        return count_lines_in_file(path, args)
 
     return 0
 
 
+def count_lines_in_driectory(path, args, depth, total, iteration):
+    iteration += 1
+
+    for ignore in direcorties_to_ignore:
+        if ignore in path and not args.all:
+            return 0
+
+    if args.printdirectory: print(path)
+
+    return dir_line_count(path, args, depth + 1, total, iteration)
+
+
+def count_lines_in_file(path, args):
+    if args.printfile: 
+        print(path)
+
+    if path.lower().endswith(tuple(types_to_ignore)): 
+        return 0
+
+    return len(open(path, 'rb').readlines())
+
+
 def dir_line_count(dir, args, depth = 0, total = 0, iteration = 0):
-    return sum(map(lambda item: item_line_count(join(dir, item), args, depth + 1, total, iteration), listdir(dir)))
+    return sum(
+        map(lambda item: item_line_count(join(dir, item), args, depth + 1, total, iteration), 
+            listdir(dir)
+        )
+    )
 
 
 def add_arguments(parser):
@@ -56,24 +68,34 @@ def add_arguments(parser):
     parser.add_argument("-pf", "--printfile", help="Prints the path of every file", action="store_true")
     parser.add_argument("-pd", "--printdirectory", help="Prints the path of every directory", action="store_true")
     parser.add_argument("-a", "--all", help="Scans all directories, even those in the ingore list", action="store_true")
+    parser.add_argument("-s", "--save", help="Save results to file", action="store_true")
 
 
-if __name__ == '__main__':
+def get_scan_directory(args):
+    if args.directory is None:
+        return input('\nDirectory path: ')
 
+    return args.directory
+
+def log(message):
+    print(message)
+
+def get_arguments():
     parser = argparse.ArgumentParser()
     add_arguments(parser)
     args = parser.parse_args()
     args.git = True
+    return args
 
-    if args.directory is None:
-        directory = input('\nDirectory path: ')
-    else:
-        directory = args.directory
+if __name__ == '__main__':
+    args = get_arguments()    
+
+    directory = get_scan_directory(args)
 
     directories_count = count_directories(directory, args)
-    print(f"Number of sub-directories to count {directories_count}")
+    log(f"Number of sub-directories to count {directories_count}")
     
     result = dir_line_count(directory, args, total = directories_count)
-    print(f"Number of lines found: {result}\n")
+    log(f"Number of lines found: {result}\n")
 
-    input("Press enter to exit")
+    input("Press enter to exit...")
