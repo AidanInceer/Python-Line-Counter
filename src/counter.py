@@ -1,3 +1,5 @@
+from enum import Enum
+import json
 from os import listdir, walk
 from os.path import isfile, isdir, join
 
@@ -8,6 +10,7 @@ class Counter:
         self.args = args
         self.ignored_directories = ignored_directories
         self.ignored_types = ignored_types
+        self.data = {}
 
 
     def count_directories(self):
@@ -21,24 +24,37 @@ class Counter:
 
 
     def count_lines(self):
-        return self._directory_line_count(self.path)
+        line_count = self._directory_line_count(self.path)
+        
+        if self.args.save: self.data['line_count'] = line_count
+
+        write_to_file(self.data)
+
+        return line_count
 
 
     def count_lines_in_file(self, path):
-        if self.args.printfile: print(path)
-
         if path.lower().endswith(tuple(self.ignored_types)): 
             return 0
 
-        return len(open(path, 'rb').readlines())
+        line_count = len(open(path, 'rb').readlines())
+
+        if self.args.save: self.data[path] = Item(path, ItemType.FILE, line_count)
+
+        return line_count
 
 
     def _directory_line_count(self, dir, depth = 0, total = 0, iteration = 0):
-        return sum(
+        line_count =  sum(
                 map(lambda item: self._count_lines_in_item(join(dir, item), depth + 1, total, iteration), 
                     listdir(dir)
                 )
             )
+
+        if self.args.printdirectory: print(dir)
+        if self.args.save: self.data[dir] = Item(dir, ItemType.DIR, line_count)
+
+        return line_count
 
 
     def _count_lines_in_item(self, path, depth = 0, total = 0, iteration = 0):
@@ -50,6 +66,7 @@ class Counter:
             
 
         elif isfile(path):
+            if self.args.printfile: print(path)
             return self.count_lines_in_file(path)
 
         return 0
@@ -66,4 +83,35 @@ class Counter:
 
         return self._directory_line_count(path, depth + 1, total, iteration)
 
-    
+
+class ItemType(Enum):
+    FILE = 1
+    DIR = 2
+    OTHER = 3
+
+class Item:
+    def __init__(self, path: str, type : ItemType, lines : int):
+        self.path = path
+        self.type = type
+        self.lines = lines
+
+    def __dict__(self):
+        return {'path': self.path, 'type': self.type.name, 'lines': self.lines}
+
+    def __repr__(self):
+        return f'<counter.Item path:{self.path}, type: {self.type.name}, lines: {self.lines}'
+
+
+class SimpleEncoder(json.JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__()
+
+
+def write_to_file(data):
+    with open('data.json', 'w') as data_file:
+        data_file.write(to_json(data))
+        # json.dump(data, data_file)
+
+
+def to_json(data):
+    return json.dumps(data, indent=4, cls=SimpleEncoder)
