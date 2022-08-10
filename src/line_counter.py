@@ -4,7 +4,7 @@ from os.path import isfile, isdir, join
 
 # from print_progress import print_progress_bar
 
-direcorties_to_ignore = ['.git', '.next', 'node_modules']
+direcorties_to_ignore = ['.git', '.next', 'node_modules', 'site-packages', '__pycache__']
 types_to_ignore = ['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.svg']
 
 
