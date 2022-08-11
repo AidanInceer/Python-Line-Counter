@@ -84,7 +84,7 @@ class Counter:
         return 0
 
 
-    def _count_lines_in_driectory(self, path:str, depth:int, total:int, iteration:int) => int:
+    def _count_lines_in_driectory(self, path:str, depth:int, total:int, iteration:int) -> int:
         iteration += 1
 
         for ignore in self.config.directories_to_ignore:
