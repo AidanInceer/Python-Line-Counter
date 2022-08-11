@@ -5,7 +5,7 @@ from os.path import isfile, isdir, join
 
 from config import Config
 from file_handler import write_to_file
-from tree import make_tree
+from tree import print_tree, make_tree
 
 class Counter:
     path: str 
@@ -18,6 +18,13 @@ class Counter:
         self.args = args
         self.config = config
         self.data = {}
+
+    
+    def print_tree(self):
+        if 'root' not in self.data:
+            print('Tree is empty...')
+        else:
+            print_tree(self.data)
 
 
     def count_directories(self) -> int:

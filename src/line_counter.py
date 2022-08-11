@@ -1,7 +1,6 @@
 from counter import Counter
 from args import get_arguments
 from config import get_config
-# from tree import print_tree
 
 def get_directory_to_scan(args):
     if args.directory is None:
@@ -26,5 +25,5 @@ if __name__ == '__main__':
     result = counter.count_lines()
     log(f"Number of lines found: {result}\n")
 
-    # print_tree(counter.data)
+    counter.print_tree()
     input("Press enter to exit...")
