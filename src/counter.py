@@ -1,10 +1,10 @@
 from argparse import ArgumentParser
 from enum import Enum
-import json
 from os import listdir, walk
 from os.path import isfile, isdir, join
-from config import Config
 
+from config import Config
+from file_handler import write_to_file
 from tree import make_tree
 
 class Counter:
@@ -13,14 +13,14 @@ class Counter:
     config: Config
     data: dict
 
-    def __init__(self, path : str, args : ArgumentParser, config : Config):
+    def __init__(self, path:str, args:ArgumentParser, config:Config):
         self.path = path
         self.args = args
         self.config = config
         self.data = {}
 
 
-    def count_directories(self):
+    def count_directories(self) -> int:
         count = 0
         for _, dirs, _ in walk(self.path):
             if not self.args.all:
@@ -30,7 +30,7 @@ class Counter:
         return count 
 
 
-    def count_lines(self):
+    def count_lines(self) -> int:
         line_count = self._directory_line_count(self.path)
         
         if self.args.save: 
@@ -44,7 +44,7 @@ class Counter:
         return line_count
 
 
-    def count_lines_in_file(self, path):
+    def count_lines_in_file(self, path:str) -> int:
         if path.lower().endswith(tuple(self.config.types_to_ignore)): 
             return 0
 
@@ -56,7 +56,7 @@ class Counter:
         return line_count
 
 
-    def _directory_line_count(self, dir, depth = 0, total = 0, iteration = 0):
+    def _directory_line_count(self, dir:str, depth:int = 0, total:int = 0, iteration:int = 0) -> int:
         line_count =  sum(
                 map(lambda item: self._count_lines_in_item(join(dir, item), depth + 1, total, iteration), 
                     listdir(dir)
@@ -69,7 +69,7 @@ class Counter:
         return line_count
 
 
-    def _count_lines_in_item(self, path, depth = 0, total = 0, iteration = 0):
+    def _count_lines_in_item(self, path:str, depth:int = 0, total:int = 0, iteration:int = 0) -> int:
         if depth > self.args.maxdepth and self.args.maxdepth > 0:
             return 0
 
@@ -84,7 +84,7 @@ class Counter:
         return 0
 
 
-    def _count_lines_in_driectory(self, path, depth, total, iteration):
+    def _count_lines_in_driectory(self, path:str, depth:int, total:int, iteration:int) => int:
         iteration += 1
 
         for ignore in self.config.directories_to_ignore:
@@ -102,7 +102,7 @@ class ItemType(Enum):
     OTHER = 3
 
 class Item:
-    def __init__(self, path: str, type : ItemType, lines : int):
+    def __init__(self, path: str, type:ItemType, lines:int):
         self.path = path
         self.type = type
         self.lines = lines
