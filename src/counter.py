@@ -3,6 +3,8 @@ import json
 from os import listdir, walk
 from os.path import isfile, isdir, join
 
+from tree import make_tree
+
 class Counter:
 
     def __init__(self, path, args, ignored_directories=[], ignored_types=[]):
@@ -19,16 +21,20 @@ class Counter:
             if not self.args.all:
                 dirs[:] = [d for d in dirs if d not in self.ignored_directories]
             for _ in dirs:
-                    count += 1
+                count += 1
         return count 
 
 
     def count_lines(self):
         line_count = self._directory_line_count(self.path)
         
-        if self.args.save: self.data['line_count'] = line_count
+        if self.args.save: 
+            self.data['line_count'] = line_count
+            self.data['root'] = self.path
 
-        write_to_file(self.data)
+            print('Saving to file...')
+            make_tree(self.path, self.data)
+            write_to_file(self.data)
 
         return line_count
 
@@ -40,6 +46,7 @@ class Counter:
         line_count = len(open(path, 'rb').readlines())
 
         if self.args.save: self.data[path] = Item(path, ItemType.FILE, line_count)
+
 
         return line_count
 
@@ -94,12 +101,13 @@ class Item:
         self.path = path
         self.type = type
         self.lines = lines
+        self.children = []
 
     def __dict__(self):
-        return {'path': self.path, 'type': self.type.name, 'lines': self.lines}
+        return {'path': self.path, 'type': self.type.name, 'lines': self.lines, 'children': self.children}
 
     def __repr__(self):
-        return f'<counter.Item path:{self.path}, type: {self.type.name}, lines: {self.lines}'
+        return f'<counter.Item path:{self.path}, type: {self.type.name}, lines: {self.lines},  children: {self.children}'
 
 
 class SimpleEncoder(json.JSONEncoder):
@@ -110,7 +118,9 @@ class SimpleEncoder(json.JSONEncoder):
 def write_to_file(data):
     with open('data.json', 'w') as data_file:
         data_file.write(to_json(data))
-        # json.dump(data, data_file)
+
+    with open('data.js', 'w') as data_file:
+        data_file.write('const data = ' + to_json(data))
 
 
 def to_json(data):
