@@ -8,12 +8,10 @@ def add_arguments(parser):
     parser.add_argument("-a", "--all", help="Scans all directories, even those in the ingore list", action="store_true")
     parser.add_argument("-s", "--save", help="Save results to file", action="store_true")
 
+
 def get_arguments():
     parser = argparse.ArgumentParser()
 
     add_arguments(parser)
 
-    args = parser.parse_args()
-    args.git = True
-
-    return args
+    return parser.parse_args()
