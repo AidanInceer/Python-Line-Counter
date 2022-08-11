@@ -20,12 +20,13 @@ Run line_counter.py with the following optional commands:
 -pf, --printfile        Prints the path of every file
 pd, --printdirectory    Prints the path of every directory
 -a, --all               Scans all directories, even those in the ingore list
+-s, --save            Save results to file
 ```
 
 ### Ignore list
 
 By default, these directories will be ignored:
-['.git', '.next', 'node_modules']
+.git,.next, node_modules, site-packages, \_\_pycache\_\_
 
 and these file types will be ignored:
-['.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.svg']
+.png, .jpg, .jpeg, .tiff, .bmp, .gif, .svg
