@@ -1,4 +1,4 @@
-import argparse
+from argparse import ArgumentParser
 
 def add_arguments(parser):
     parser.add_argument("-m", "--maxdepth", help="Sets the max recusrion depth", type=int, default=-1)
@@ -9,8 +9,8 @@ def add_arguments(parser):
     parser.add_argument("-s", "--save", help="Save results to file", action="store_true")
 
 
-def get_arguments():
-    parser = argparse.ArgumentParser()
+def get_arguments() -> ArgumentParser:
+    parser = ArgumentParser()
 
     add_arguments(parser)
 
