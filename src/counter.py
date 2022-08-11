@@ -1,17 +1,22 @@
+from argparse import ArgumentParser
 from enum import Enum
 import json
 from os import listdir, walk
 from os.path import isfile, isdir, join
+from config import Config
 
 from tree import make_tree
 
 class Counter:
+    path: str 
+    args: ArgumentParser
+    config: Config
+    data: dict
 
-    def __init__(self, path, args, ignored_directories=[], ignored_types=[]):
+    def __init__(self, path : str, args : ArgumentParser, config : Config):
         self.path = path
         self.args = args
-        self.ignored_directories = ignored_directories
-        self.ignored_types = ignored_types
+        self.config = config
         self.data = {}
 
 
@@ -19,7 +24,7 @@ class Counter:
         count = 0
         for _, dirs, _ in walk(self.path):
             if not self.args.all:
-                dirs[:] = [d for d in dirs if d not in self.ignored_directories]
+                dirs[:] = [d for d in dirs if d not in self.config.directories_to_ignore]
             for _ in dirs:
                 count += 1
         return count 
@@ -40,7 +45,7 @@ class Counter:
 
 
     def count_lines_in_file(self, path):
-        if path.lower().endswith(tuple(self.ignored_types)): 
+        if path.lower().endswith(tuple(self.config.types_to_ignore)): 
             return 0
 
         line_count = len(open(path, 'rb').readlines())
@@ -82,7 +87,7 @@ class Counter:
     def _count_lines_in_driectory(self, path, depth, total, iteration):
         iteration += 1
 
-        for ignore in self.ignored_directories:
+        for ignore in self.config.directories_to_ignore:
             if ignore in path and not self.args.all:
                 return 0
 
@@ -120,7 +125,7 @@ def write_to_file(data):
         data_file.write(to_json(data))
 
     with open('data.js', 'w') as data_file:
-        data_file.write('const data = ' + to_json(data))
+        data_file.write('const DATA = ' + to_json(data))
 
 
 def to_json(data):
