@@ -4,6 +4,29 @@
     <script src="data.js"></script>
     <script src="index.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            width: 100%;
+            background-color: rgb(255, 88, 59);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            color: wheat;
+        }
+
+        #root {
+            padding: 10px;
+        }
+
         .node {
             padding-left: 10px;
         }
@@ -23,5 +46,7 @@
 </head>
 
 <body>
+    <header><h1>Line Counter</h1></header>
+    <!-- <button id="collapse-all">Collapse All</button> -->
     <div id="root"></div>
 </body>
