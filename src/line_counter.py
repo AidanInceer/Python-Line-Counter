@@ -25,5 +25,7 @@ if __name__ == '__main__':
     result = counter.count_lines()
     log(f"Number of lines found: {result}\n")
 
-    counter.print_tree()
+    if args.save and args.print_tree:
+        counter.print_tree()
+    
     input("Press enter to exit...")
