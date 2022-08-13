@@ -6,7 +6,9 @@ def make_tree(path, data):
             currNode = Node(path, dirnames, filenames, data)
             data[path].children = currNode.children
 
+
 class Node(object):
+    
     def __init__(self, path, child_dirs, child_files, data):
         self.path = path
         self.child_dirs = list(map(lambda dir : path + '\\' + dir, child_dirs))
