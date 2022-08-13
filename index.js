@@ -33,17 +33,20 @@ function addNodeToDOM(parentId, node) {
     document.getElementById(parentId ?? 'root').appendChild(newElement);
 }
 
-function handleCollapseItem(e, node) {
+function handleCollapseItem(e) {
     e.stopPropagation();
     e.preventDefault();
+    toggleCollapseItem(e.target);
+}
 
+function toggleCollapseItem(element) {
+    const node = DATA[element.id];
     if (node.type === 'FILE') return;
 
-    const target = e.target;
-    const collapsed = target.classList.contains('collapsed');
-    target.classList.toggle('collapsed');
+    const collapsed = element.classList.contains('collapsed');
+    element.classList.toggle('collapsed');
 
-    for (const child of target.children) {
+    for (const child of element.children) {
         collapsed ? child.classList.remove('hidden') : child.classList.add('hidden');
     }
 }
