@@ -1,7 +1,10 @@
+let relativePath = false;
+
 window.addEventListener('load', () => {
     displayTree(DATA);
     document.getElementById('collapse-all').addEventListener('click', handleCollapseAll);
     document.getElementById('expand-all').addEventListener('click', handleExpandAll);
+    document.getElementById('relative-path').addEventListener('click', handleRelativePath);
 });
 
 function destroyTree(root = 'root') {
@@ -27,7 +30,7 @@ function displayTree(data, root = null, indent = 0, parentId) {
 function addNodeToDOM(parentId, node) {
     const newElement = document.createElement('div');
     newElement.id = node.path;
-    newElement.innerText = `${node.path} - [${node.lines}]`;
+    newElement.innerText = renderNode(node);
     newElement.classList.add('node');
 
     if (node.type === 'DIR') {
@@ -37,6 +40,27 @@ function addNodeToDOM(parentId, node) {
     newElement.addEventListener('click', e => handleCollapseItem(e, node));
 
     document.getElementById(parentId ?? 'root').appendChild(newElement);
+}
+
+function renderNode(node) {
+    if (relativePath) {
+        return `${node.path.split(DATA.root)[1]} - [${node.lines}]`;
+    }
+    return `${node.path} - [${node.lines}]`;
+}
+
+function reRenderAllNodes() {
+    debugger;
+    const rootItem = document.getElementById('root').firstElementChild;
+    reRenderChildNodes(rootItem);
+}
+
+function reRenderChildNodes(element) {
+    element.firstChild.nodeValue = renderNode(DATA[element.id]);
+
+    for (const child of element.children) {
+        reRenderChildNodes(child);
+    }
 }
 
 function handleCollapseItem(e) {
@@ -87,4 +111,10 @@ function expandAllChildren(element) {
         child.classList.remove('hidden');
         expandAllChildren(child);
     }
+}
+
+function handleRelativePath(e) {
+    relativePath = !relativePath;
+    e.target.innerText = relativePath ? 'Absolute Path' : 'Relative Path';
+    reRenderAllNodes();
 }
