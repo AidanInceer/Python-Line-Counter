@@ -21,31 +21,29 @@ function displayTree(data, root = null, indent = 0, parentId) {
 function addNodeToDOM(parentId, node) {
     const newElement = document.createElement('div');
     newElement.id = node.path;
-    newElement.innerText = `${node.lines} - ${node.path}`;
+    newElement.innerText = `${node.path} - [${node.lines}]`;
     newElement.classList.add('node');
 
     if (node.type === 'DIR') {
-        newElement.classList.add('collapsable');
+        newElement.classList.add('collapsible');
     }
 
-    newElement.addEventListener('click', e => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (node.type === 'FILE') return;
-
-        const target = e.target;
-        const collapsed = target.classList.contains('collapsed');
-        target.classList.toggle('collapsed');
-
-        for (const child of target.children) {
-            if (collapsed) {
-                child.classList.remove('hidden');
-            } else {
-                child.classList.add('hidden');
-            }
-        }
-    });
+    newElement.addEventListener('click', e => handleCollapseItem(e, node));
 
     document.getElementById(parentId ?? 'root').appendChild(newElement);
+}
+
+function handleCollapseItem(e, node) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (node.type === 'FILE') return;
+
+    const target = e.target;
+    const collapsed = target.classList.contains('collapsed');
+    target.classList.toggle('collapsed');
+
+    for (const child of target.children) {
+        collapsed ? child.classList.remove('hidden') : child.classList.add('hidden');
+    }
 }
