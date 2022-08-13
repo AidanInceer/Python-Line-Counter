@@ -1,6 +1,12 @@
 window.addEventListener('load', () => {
     displayTree(DATA);
+    document.getElementById('collapse-all').addEventListener('click', handleCollapseAll);
+    document.getElementById('expand-all').addEventListener('click', handleExpandAll);
 });
+
+function destroyTree(root = 'root') {
+    document.getElementById(root).innerHTML = '';
+}
 
 function displayTree(data, root = null, indent = 0, parentId) {
     if (!root) {
@@ -48,5 +54,37 @@ function toggleCollapseItem(element) {
 
     for (const child of element.children) {
         collapsed ? child.classList.remove('hidden') : child.classList.add('hidden');
+    }
+}
+
+function handleCollapseAll(e) {
+    const rootItem = document.getElementById('root').firstElementChild;
+    collapseAllChildren(rootItem);
+}
+
+function collapseAllChildren(element) {
+    if (DATA[element.id].type === 'FILE') return;
+    element.classList.add('collapsed');
+    for (const child of element.children) {
+        child.classList.add('hidden');
+        collapseAllChildren(child);
+    }
+}
+
+function handleExpandAll(e) {
+    const rootItem = document.getElementById('root').firstElementChild;
+    expandAllChildren(rootItem);
+}
+
+function expandAllChildren() {
+    const rootItem = document.getElementById('root').firstElementChild;
+    expandAllChildren(rootItem);
+}
+
+function expandAllChildren(element) {
+    element.classList.remove('collapsed');
+    for (const child of element.children) {
+        child.classList.remove('hidden');
+        expandAllChildren(child);
     }
 }
