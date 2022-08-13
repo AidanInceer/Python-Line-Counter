@@ -5,7 +5,7 @@ from os.path import isfile, isdir, join
 
 from config import Config
 from file_handler import write_to_file
-from tree import print_tree, make_tree
+import tree
 
 class Counter:
     path: str 
@@ -26,7 +26,7 @@ class Counter:
         elif 'root' not in self.data:
             print('Tree has no root...')
         else:
-            print_tree(self.data)
+            tree.print_tree(self.data)
 
 
     def count_directories(self) -> int:
@@ -52,7 +52,7 @@ class Counter:
         self.data['root'] = self.path
 
         print('Saving to file...')
-        make_tree(self.path, self.data)
+        tree.make_tree(self.path, self.data)
         write_to_file(self.data)
 
 
