@@ -7,10 +7,10 @@ class SimpleEncoder(json.JSONEncoder):
 
 
 def write_to_file(data):
-    with open('data.json', 'w') as data_file:
+    with open('../data.json', 'w') as data_file:
         data_file.write(to_json(data))
 
-    with open('data.js', 'w') as data_file:
+    with open('../data.js', 'w') as data_file:
         data_file.write('const DATA = ' + to_json(data))
 
 
